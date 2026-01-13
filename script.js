@@ -1,7 +1,14 @@
 const input = document.getElementById("taskInput");
 const button = document.getElementById("addBtn");
 const list = document.getElementById("taskList");
-const taskArray = [];
+
+let taskArray = [];
+if (localStorage.getItem("taskArray") !== null){
+
+    taskArray = JSON.parse(localStorage.getItem("taskArray"));
+}
+
+
 
 function addItemToList (){
     const taskText = input.value;
@@ -13,7 +20,7 @@ function addItemToList (){
     const li = document.createElement("li");
     li.textContent = taskText;
 
-    taskArray.push(li)
+    
     
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "DELETE";
@@ -29,6 +36,9 @@ function addItemToList (){
     li.appendChild(deleteBtn);
     list.appendChild(li);
 
+    //Put the task inside the array and save the array to local storage
+    taskArray.push(li)
+    localStorage.setItem("taskArray", JSON.stringify(taskArray))
     input.value = "";
 
 }
