@@ -10,6 +10,30 @@ if (localStorage.getItem("taskArray") !== null){
 
 
 
+const renderTask = () =>{
+    list.innerHTML = "";
+    for(let i = 0; i < taskArray.length; i++){
+        const li = document.createElement("li");
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "DELETE";
+        li.textContent = taskArray[i];
+
+
+
+        deleteBtn.addEventListener("click", () => {
+            taskArray.splice(i, 1);
+            localStorage.setItem("taskArray", JSON.stringify(taskArray));
+            renderTask()
+        })
+
+        li.appendChild(deleteBtn);
+        list.appendChild(li);
+    }
+
+}
+
+renderTask();
+
 function addItemToList (){
     const taskText = input.value;
 
@@ -20,8 +44,6 @@ function addItemToList (){
     const li = document.createElement("li");
     li.textContent = taskText;
 
-    
-    
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "DELETE";
 
@@ -37,8 +59,8 @@ function addItemToList (){
     list.appendChild(li);
 
     //Put the task inside the array and save the array to local storage
-    taskArray.push(li)
-    localStorage.setItem("taskArray", JSON.stringify(taskArray))
+    taskArray.push(taskText);
+    localStorage.setItem("taskArray", JSON.stringify(taskArray));
     input.value = "";
 
 }
