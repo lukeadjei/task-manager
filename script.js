@@ -1,7 +1,7 @@
 const input = document.getElementById("taskInput");
 const button = document.getElementById("addBtn");
 const list = document.getElementById("taskList");
-
+const taskArray = [];
 
 function addItemToList (){
     const taskText = input.value;
@@ -13,6 +13,8 @@ function addItemToList (){
     const li = document.createElement("li");
     li.textContent = taskText;
 
+    taskArray.push(li)
+    
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "DELETE";
 
