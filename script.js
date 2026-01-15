@@ -1,6 +1,6 @@
 const input = document.getElementById("taskInput");
 const button = document.getElementById("addBtn");
-const list = document.getElementById("taskList");
+const list = document.getElementById("taskList"); 
 
 let taskArray = [];
 if (localStorage.getItem("taskArray") !== null){
@@ -15,10 +15,16 @@ const renderTask = () =>{
     for(let i = 0; i < taskArray.length; i++){
         const li = document.createElement("li");
         const deleteBtn = document.createElement("button");
+        const completeBtn = document.createElement("input");
+
+        completeBtn.type = "checkbox";
+        
+        if (taskArray[i].completed === true){
+            completeBtn.checked = true;
+        }
+
         deleteBtn.textContent = "DELETE";
-        li.textContent = taskArray[i];
-
-
+        li.textContent = taskArray[i].text;
 
         deleteBtn.addEventListener("click", () => {
             taskArray.splice(i, 1);
@@ -26,7 +32,14 @@ const renderTask = () =>{
             renderTask()
         })
 
+        completeBtn.addEventListener("change", () => {
+            //grab the event and set equal to true and save it 
+            localStorage.setItem("taskArray", JSON.stringify(taskArray));
+            renderTask()
+        } )
+
         li.appendChild(deleteBtn);
+        li.appendChild(completeBtn);
         list.appendChild(li);
     }
 
@@ -50,6 +63,7 @@ function addItemToList (){
     taskArray.push(taskObject);
     localStorage.setItem("taskArray", JSON.stringify(taskArray));
     input.value = "";
+    renderTask();
 
 }
 
