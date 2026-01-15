@@ -2,6 +2,11 @@ const input = document.getElementById("taskInput");
 const button = document.getElementById("addBtn");
 const list = document.getElementById("taskList");
 
+const taskObject = {
+    text: "",
+    completed: false
+};
+
 let taskArray = [];
 if (localStorage.getItem("taskArray") !== null){
 
