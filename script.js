@@ -51,10 +51,6 @@ function addItemToList (){
         list.removeChild(li);
     });
 
-    li.addEventListener("click", () => {
-        list.removeChild(li)
-    });
-
     li.appendChild(deleteBtn);
     list.appendChild(li);
 
