@@ -34,12 +34,13 @@ const renderTask = () =>{
 
         completeBtn.addEventListener("change", () => {
             //grab the event and set equal to true and save it 
+            taskArray[i].completed = completeBtn.checked
             localStorage.setItem("taskArray", JSON.stringify(taskArray));
             renderTask()
         } )
 
-        li.appendChild(deleteBtn);
         li.appendChild(completeBtn);
+        li.appendChild(deleteBtn);
         list.appendChild(li);
     }
 
