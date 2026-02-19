@@ -24,7 +24,6 @@ const renderTask = () =>{
         }
 
         deleteBtn.textContent = "DELETE";
-        li.textContent = taskArray[i].text;
 
         deleteBtn.addEventListener("click", () => {
             taskArray.splice(i, 1);
@@ -38,7 +37,8 @@ const renderTask = () =>{
             localStorage.setItem("taskArray", JSON.stringify(taskArray));
             renderTask()
         } )
-
+        
+        li.appendChild(document.createTextNode(taskArray[i].text));
         li.appendChild(completeBtn);
         li.appendChild(deleteBtn);
         list.appendChild(li);
