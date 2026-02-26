@@ -48,3 +48,41 @@ app.post("/tasks", async (req, res) => {
     }
 });
 
+
+//Route to update 
+app.patch("/tasks/:id", async (req,res) =>{
+    try{
+        const id = req.params.id;
+        const newData = await Task.findByIdAndUpdate(id, req.body, {new: true});
+
+        //add check incase id is null
+        //Code 404 means user not found 
+        if (!newData){
+            return res.status(404).json({message: "Task could not be found"});
+        }
+
+        res.status(200).json(newData);
+    }catch(error){
+        res.status(500).json({message: "Server Error something went wrong"});
+    }
+})
+
+//Route to delete
+app.delete("/tasks/:id", async (req, res) => {
+    try{
+        const id = req.params.id
+        
+
+        const deletedInfo = await Task.findByIdAndDelete(id)
+
+        //Code 404 means user not found
+        if(!deletedInfo){
+            return res.status(404).json({message: "there was a problem finding the id"});
+        }
+        res.json({message:"Task successfully deleted"});
+
+    }catch(error){
+        res.status(500).json({message: "There was a problem deleting the task", error})
+    }
+});
+
