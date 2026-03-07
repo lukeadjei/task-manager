@@ -9,6 +9,22 @@ if (localStorage.getItem("taskArray") !== null){
 }
 
 
+//
+async function getTasksFromServer(){
+    try{
+        const response = await fetch("https://localhost:3000/tasks");
+        const data = await response.json();
+
+        
+        taskArray = data;
+
+        renderTask();
+    }catch(error){
+        console.log("Error fetching tasks from server", error);
+    }     
+}   
+
+
 
 const renderTask = () =>{
     list.innerHTML = "";
