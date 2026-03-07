@@ -2,11 +2,14 @@
 require('dotenv').config(); //this is getting the .env file and giving everything access to keys in the node js code
 const mongoose = require("mongoose");
 const express = require("express");
+const cors = require("cors");
 //Server Setup creation of express package
 const app = express();
 const PORT = 3000;
 //Middleware meaning the functions that get applied to request before heading to main things
+app.use(cors());
 app.use(express.json());
+
 
 //database setup creation of mongoose package
 mongoose.connect(process.env.MONGO_URI).then(() => console.log("Connected!")).catch((error) => console.log("There was an error trying to connect to the database", error));

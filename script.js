@@ -3,22 +3,18 @@ const button = document.getElementById("addBtn");
 const list = document.getElementById("taskList"); 
 
 let taskArray = [];
-if (localStorage.getItem("taskArray") !== null){
-
-    taskArray = JSON.parse(localStorage.getItem("taskArray"));
-}
 
 
 //
 async function getTasksFromServer(){
     try{
-        const response = await fetch("https://localhost:3000/tasks");
+        const response = await fetch("http://localhost:3000/tasks");
         const data = await response.json();
-
         
         taskArray = data;
 
         renderTask();
+        console.log("Tasks successfully retrieved from server", data);
     }catch(error){
         console.log("Error fetching tasks from server", error);
     }     
@@ -62,7 +58,7 @@ const renderTask = () =>{
 
 }
 
-renderTask();
+
 
 function addItemToList (){
     const taskText = input.value;
@@ -92,3 +88,4 @@ input.addEventListener("keydown", (event) =>{
 });
 
 
+getTasksFromServer();
