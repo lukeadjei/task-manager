@@ -31,6 +31,12 @@ app.listen(PORT, () => {
     console.log(`Server is running on local host with the port:${PORT}`);
 })
 
+//default route to homepage
+app.get("/", (req, res) => {
+    res.status(200).json({message: "Home Page Default Route Working"});
+});
+
+
 // route to retrieve information specifically tasks
 app.get("/tasks", async (req, res) => {
     try{

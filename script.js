@@ -1,3 +1,5 @@
+const { get } = require("mongoose");
+
 const input = document.getElementById("taskInput");
 const button = document.getElementById("addBtn");
 const list = document.getElementById("taskList"); 
@@ -60,7 +62,7 @@ const renderTask = () =>{
 
 
 
-function addItemToList (){
+async function addItemToList (){
     const taskText = input.value;
     
     if (taskText.trim() === ""){
@@ -71,13 +73,23 @@ function addItemToList (){
         text: taskText,
         completed: false
     };
+    try{
+        const response = await fetch("http://localhost:3000/tasks", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(taskObject)
+        });
+        const data = await response.json();
+        console.log("Task successfully sent to the server and has returned it.", data);
 
-    //Put the task inside the array and save the array to local storage
-    taskArray.push(taskObject);
-    localStorage.setItem("taskArray", JSON.stringify(taskArray));
-    input.value = "";
-    renderTask();
+        taskArray.push(data);
+        renderTask();
+    }catch(error){
+        console.log("Error sending the task to the server", error);
 
+    }
 }
 
 button.addEventListener("click", addItemToList);
