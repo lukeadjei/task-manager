@@ -39,10 +39,27 @@ const renderTask = () =>{
 
         deleteBtn.textContent = "DELETE";
 
-        deleteBtn.addEventListener("click", () => {
-            taskArray.splice(i, 1);
-            localStorage.setItem("taskArray", JSON.stringify(taskArray));
-            renderTask()
+        deleteBtn.addEventListener("click", async () => {
+            try{
+                const response = await fetch(`http://localhost:3000/tasks/${taskArray[i]._id}`, 
+                    {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json"
+                    }
+
+                });
+                console.log("successfully deleted task from server", response.status);
+                taskArray.splice(i, 1);
+                renderTask();
+            }catch(error){
+                console.log("Error deleting task from server", error);
+            }
+            
+            
+            //taskArray.splice(i, 1);
+            //localStorage.setItem("taskArray", JSON.stringify(taskArray));
+            //renderTask()
         })
 
         completeBtn.addEventListener("change", () => {
