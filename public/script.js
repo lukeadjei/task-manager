@@ -1,5 +1,3 @@
-const { get } = require("mongoose");
-
 const input = document.getElementById("taskInput");
 const button = document.getElementById("addBtn");
 const list = document.getElementById("taskList"); 
@@ -10,7 +8,8 @@ let taskArray = [];
 //
 async function getTasksFromServer(){
     try{
-        const response = await fetch("http://localhost:3000/tasks");
+        taskArray = [];
+        const response = await fetch("/tasks");
         const data = await response.json();
         
         taskArray = data;
@@ -41,14 +40,14 @@ const renderTask = () =>{
 
         deleteBtn.addEventListener("click", async () => {
             try{
-                const response = await fetch(`http://localhost:3000/tasks/${taskArray[i]._id}`, 
+                const response = await fetch(`/tasks/${taskArray[i]._id}`, 
                     {
                         method: "DELETE",
                         headers: {
                             "Content-Type": "application/json"
-                    }
+                        }
 
-                });
+                    });
                 console.log("successfully deleted task from server", response.status);
                 taskArray.splice(i, 1);
                 renderTask();
@@ -62,12 +61,27 @@ const renderTask = () =>{
             //renderTask()
         })
 
-        completeBtn.addEventListener("change", () => {
+        completeBtn.addEventListener("change", async () => {
             //grab the event and set equal to true and save it 
             taskArray[i].completed = completeBtn.checked
-            localStorage.setItem("taskArray", JSON.stringify(taskArray));
-            renderTask()
-        } )
+            try {
+                const response = await fetch(`/tasks/${taskArray[i]._id}`,
+                    {
+                        method: "PATCH",
+                        headers:{
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({completed: taskArray[i].completed})
+                    }
+                );
+                const data = await response.json();
+                console.log("Task successfully updated on the server", data);
+            }catch(error){
+                taskArray[i].completed = !taskArray[i].completed;
+                completeBtn.checked = taskArray[i].completed;
+                console.log("error updating task on server", error);
+            }
+        });
         
         li.appendChild(document.createTextNode(taskArray[i].text));
         li.appendChild(completeBtn);
@@ -91,7 +105,7 @@ async function addItemToList (){
         completed: false
     };
     try{
-        const response = await fetch("http://localhost:3000/tasks", {
+        const response = await fetch("/tasks", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

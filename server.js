@@ -3,12 +3,14 @@ require('dotenv').config(); //this is getting the .env file and giving everythin
 const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 //Server Setup creation of express package
 const app = express();
 const PORT = 3000;
 //Middleware meaning the functions that get applied to request before heading to main things
 app.use(cors());
 app.use(express.json());
+app.use(express.static("public")); //this is saying that we want to serve static files from the public folder
 
 
 //database setup creation of mongoose package
@@ -33,7 +35,7 @@ app.listen(PORT, () => {
 
 //default route to homepage
 app.get("/", (req, res) => {
-    res.status(200).json({message: "Home Page Default Route Working"});
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 
