@@ -3,6 +3,7 @@ require('dotenv').config(); //this is getting the .env file and giving everythin
 const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
+const Task = require("./models/Tasks");
 const path = require("path");
 //Server Setup creation of express package
 const app = express();
@@ -16,17 +17,6 @@ app.use(express.static("public")); //this is saying that we want to serve static
 //database setup creation of mongoose package
 mongoose.connect(process.env.MONGO_URI).then(() => console.log("Connected!")).catch((error) => console.log("There was an error trying to connect to the database", error));
 
-//array to hold task
-const taskDataBaseArray = [];
-
-//Creates a blueprint for data
-const taskSchema = new mongoose.Schema({
-    text: String,
-    completed: Boolean
-});
-
-//This will create a model or obnject based on the blueprint or the schema
-const Task = mongoose.model('Task', taskSchema);
 
 //starting the server
 app.listen(PORT, () => {
