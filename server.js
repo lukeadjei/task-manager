@@ -118,3 +118,32 @@ app.post("/register", async (req, res) => {
         res.status(500).json({ message: "Server Error" });
     }
 });
+
+
+
+app.post("/login", async (req, res) => {
+    try{
+        const {email, password} = req.body;
+
+        //check if the email is valid
+        const user = await User.findOne({email});
+        if (!user){
+            return res.status(401).json({message: "Invalid Credentials"});
+        }
+
+        
+        //Returns true or false checking inputted password against hashed pasword 
+        const isMatch = await bcrypt.compare(password, user.password)
+
+        if (!isMatch){
+            return res.status(401).json({message: "Unauthorized"});
+        }
+
+        return res.status(200).json({message:"success"});
+
+    }catch(error){
+        console.log(error);
+        return res.status(500).json({message: "Server Error ... Maybe :P"})
+    }
+    
+});
