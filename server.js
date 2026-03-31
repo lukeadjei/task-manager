@@ -22,6 +22,22 @@ app.use(express.static("public")); //this is saying that we want to serve static
 mongoose.connect(process.env.MONGO_URI).then(() => console.log("Connected!")).catch((error) => console.log("There was an error trying to connect to the database", error));
 
 
+//middleware function to check if user is authenticated on specific routes
+const protect = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader){
+        return res.status(401).json({message: "Error"});
+    }
+    try{
+        const userToken = jwt.verify(authHeader.split(" ")[1], process.env.JWT_SECRET);
+        req.user = userToken;
+        next();
+    }catch(error){
+        return res.status(401).json({message: "Error"});
+    }
+};
+
+
 //starting the server
 app.listen(PORT, () => {
     console.log(`Server is running on local host with the port:${PORT}`);
