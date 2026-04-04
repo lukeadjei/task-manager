@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 
 
 // route to retrieve information specifically tasks
-app.get("/tasks", async (req, res) => {
+app.get("/tasks", protect, async (req, res) => {
     try{
         const tasks = await Task.find();
         res.json(tasks);
@@ -41,8 +41,8 @@ app.get("/tasks", async (req, res) => {
     }
 });
 
-//route to update or sending data to server
-app.post("/tasks", async (req, res) => {
+//route to create task or sending data to server
+app.post("/tasks", protect, async (req, res) => {
     try{
         const sentData = await Task.create(req.body);
         res.status(201).json(sentData);
@@ -53,7 +53,7 @@ app.post("/tasks", async (req, res) => {
 
 
 //Route to update 
-app.patch("/tasks/:id", async (req,res) =>{
+app.patch("/tasks/:id", protect, async (req,res) =>{
     try{
         const id = req.params.id;
         const newData = await Task.findByIdAndUpdate(id, req.body, {new: true});
@@ -71,7 +71,7 @@ app.patch("/tasks/:id", async (req,res) =>{
 })
 
 //Route to delete
-app.delete("/tasks/:id", async (req, res) => {
+app.delete("/tasks/:id", protect, async (req, res) => {
     try{
         const id = req.params.id
         
