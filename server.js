@@ -6,7 +6,9 @@ const cors = require("cors");
 const Task = require("./models/Tasks");
 const path = require("path");
 const User = require("./models/User");
-const bcrypt = require ("bcrypt");
+const bcrypt = require ("bcrypt"); //package for hasing passwords 
+const jwt = require("jsonwebtoken"); //package for creating tokens for authentication and auth
+
 //Server Setup creation of express package
 const app = express();
 const PORT = 3000;
@@ -18,6 +20,22 @@ app.use(express.static("public")); //this is saying that we want to serve static
 
 //database setup creation of mongoose package
 mongoose.connect(process.env.MONGO_URI).then(() => console.log("Connected!")).catch((error) => console.log("There was an error trying to connect to the database", error));
+
+
+//middleware function to check if user is authenticated on specific routes
+const protect = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader){
+        return res.status(401).json({message: "Error"});
+    }
+    try{
+        const userToken = jwt.verify(authHeader.split(" ")[1], process.env.JWT_SECRET);
+        req.user = userToken;
+        next();
+    }catch(error){
+        return res.status(401).json({message: "Error"});
+    }
+};
 
 
 //starting the server
@@ -139,7 +157,8 @@ app.post("/login", async (req, res) => {
             return res.status(401).json({message: "Unauthorized"});
         }
 
-        return res.status(200).json({message:"success"});
+        const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+        return res.status(200).json({message:"success", token});
 
     }catch(error){
         console.log(error);
