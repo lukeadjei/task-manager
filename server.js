@@ -52,7 +52,7 @@ app.get("/", (req, res) => {
 // route to retrieve information specifically tasks
 app.get("/tasks", protect, async (req, res) => {
     try{
-        const tasks = await Task.find();
+        const tasks = await Task.find({userId: req.user.userId});
         res.json(tasks);
     }catch (error){
         res.status(500).json({message: "Error trying to find task"});
