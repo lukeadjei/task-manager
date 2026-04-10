@@ -62,7 +62,7 @@ app.get("/tasks", protect, async (req, res) => {
 //route to create task or sending data to server
 app.post("/tasks", protect, async (req, res) => {
     try{
-        const sentData = await Task.create(req.body);
+        const sentData = await Task.create({ ...req.body, userId: req.user.userId});
         res.status(201).json(sentData);
     }catch(error){
         res.status(500).json({message: "Server Error"});
